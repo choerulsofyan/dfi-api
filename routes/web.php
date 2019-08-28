@@ -22,4 +22,10 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
         $users = \App\User::all();
         return response()->json($users);
     });
+
+    $router->get('articles', ['uses' => 'ArticleController@index']);
+    $router->get('articles/{id}', ['uses' => 'ArticleController@show']);
+    $router->post('articles', ['uses' => 'ArticleController@store']);
+    $router->put('articles/{id}', ['uses' => 'ArticleController@update']);
+    $router->delete('articles/{id}', ['uses' => 'ArticleController@destroy']);
 });
