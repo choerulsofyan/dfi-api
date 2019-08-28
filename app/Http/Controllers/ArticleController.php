@@ -31,12 +31,12 @@ class ArticleController extends Controller
             'content' => 'required|string'
         ]);
 
-        $articles = Article::firstOrCreate([
+        $article = Article::firstOrCreate([
             'title' => $request->title,
             'content' => $request->content
         ]);
 
-        return response()->json($articles, 201);
+        return response()->json($article, 201);
     }
 
     /**
