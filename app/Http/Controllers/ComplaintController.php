@@ -32,7 +32,7 @@ class ComplaintController extends Controller
             'description' => 'required|string'
         ]);
 
-        $complaint = Complaint::firstOrCreate([
+        $complaint = Complaint::create([
             'email' => $request->email,
             'subject' => $request->subject,
             'description' => $request->description
