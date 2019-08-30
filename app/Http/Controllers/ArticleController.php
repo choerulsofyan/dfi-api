@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Article;
 
 class ArticleController extends Controller
@@ -15,7 +16,16 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::orderBy('created_at', 'DESC')->get();
-        return response()->json($articles);
+
+        foreach ($articles as $key => $value) {
+
+            // $articles[$key]['created_at'] = date("M d, Y", strtotime($value['created_at']));
+            $articles[$key]['content'] = str_limit($value['content'], 100);
+        }
+
+        $data = array("status" => 200, "results" => $articles);
+
+        return response()->json($data);
     }
 
     /**

@@ -27,7 +27,7 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|string|unique:subscriptions'
+            'email' => 'required|string'
         ]);
 
         $subscription = Subscription::firstOrCreate([
