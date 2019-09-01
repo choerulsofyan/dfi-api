@@ -15,11 +15,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::orderBy('created_at', 'DESC')->get();
+        $articles = Article::select('id', 'title', 'content', 'created_at')->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {
 
-            // $articles[$key]['created_at'] = date("M d, Y", strtotime($value['created_at']));
+            $created_at = $value['created_at']->format('d F Y H.i');
+            unset($articles[$key]['created_at']);
+            $articles[$key]['date'] = $created_at;
             $articles[$key]['content'] = str_limit($value['content'], 100);
         }
 
@@ -57,8 +59,15 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        $article = Article::findOrFail($id);
-        return response()->json($article);
+        $article = Article::select('id', 'title', 'content', 'created_at')->find($id);
+
+        $created_at = $article->created_at->format('d F Y H.i');
+        unset($article->created_at);
+        $article->date = $created_at;
+
+        $data = array("status" => 200, "results" => $article);
+
+        return response()->json($data);
     }
 
     /**
