@@ -49,7 +49,7 @@ class ComplaintController extends Controller
      */
     public function show($id)
     {
-        $complaint = Complaint::findOrFail($id);
+        $complaint = Complaint::find($id);
         return response()->json($complaint);
     }
 
@@ -61,7 +61,7 @@ class ComplaintController extends Controller
      */
     public function destroy($id)
     {
-        Complaint::findOrFail($id)->delete();
+        Complaint::find($id)->delete();
         return response()->json('Complaint deleted successfully');
     }
 }

@@ -27,6 +27,10 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->put('articles/{id}', ['uses' => 'ArticleController@update']);
     $router->delete('articles/{id}', ['uses' => 'ArticleController@destroy']);
 
+    $router->get('comments', ['uses' => 'CommentController@index']);
+    $router->get('comments/{id}', ['uses' => 'CommentController@show']);
+    $router->put('comments/{id}', ['uses' => 'CommentController@update']);
+
     $router->get('subscriptions', ['uses' => 'SubscriptionController@index']);
     $router->delete('subscriptions/{id}', ['uses' => 'SubscriptionController@destroy']);
 
@@ -42,6 +46,10 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
 
 $router->get('articles', ['uses' => 'ArticleController@index']);
 $router->get('articles/{id}', ['uses' => 'ArticleController@show']);
+$router->get('articles/{id}/comments', ['uses' => 'ArticleController@comments']);
+
+$router->post('comments', ['uses' => 'CommentController@store']);
+$router->delete('comments/{id}', ['uses' => 'CommentController@destroy']);
 
 $router->post('complaints', ['uses' => 'ComplaintController@store']);
 
