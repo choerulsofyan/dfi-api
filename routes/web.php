@@ -26,22 +26,25 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->post('articles', ['uses' => 'ArticleController@store']);
     $router->put('articles/{id}', ['uses' => 'ArticleController@update']);
     $router->delete('articles/{id}', ['uses' => 'ArticleController@destroy']);
+
+    $router->get('subscriptions', ['uses' => 'SubscriptionController@index']);
+    $router->delete('subscriptions/{id}', ['uses' => 'SubscriptionController@destroy']);
+
+    $router->get('complaints', ['uses' => 'ComplaintController@index']);
+    $router->get('complaints/{id}', ['uses' => 'ComplaintController@show']);
+    $router->delete('complaints/{id}', ['uses' => 'ComplaintController@destroy']);
+
+    $router->get('programs', ['uses' => 'ProgramController@index']);
+    $router->get('programs/{id}', ['uses' => 'ProgramController@show']);
+    $router->put('programs/{id}', ['uses' => 'ProgramController@update']);
+    $router->delete('programs/{id}', ['uses' => 'ProgramController@destroy']);
 });
 
 $router->get('articles', ['uses' => 'ArticleController@index']);
 $router->get('articles/{id}', ['uses' => 'ArticleController@show']);
 
-// $router->get('complaints', ['uses' => 'ComplaintController@index']);
-// $router->get('complaints/{id}', ['uses' => 'ComplaintController@show']);
 $router->post('complaints', ['uses' => 'ComplaintController@store']);
-// $router->delete('complaints/{id}', ['uses' => 'ComplaintController@destroy']);
 
-// $router->get('subscriptions', ['uses' => 'SubscriptionController@index']);
 $router->post('subscriptions', ['uses' => 'SubscriptionController@store']);
-// $router->delete('subscriptions/{id}', ['uses' => 'SubscriptionController@destroy']);
 
-$router->get('programs', ['uses' => 'ProgramController@index']);
-$router->get('programs/{id}', ['uses' => 'ProgramController@show']);
 $router->post('programs', ['uses' => 'ProgramController@store']);
-$router->put('programs/{id}', ['uses' => 'ProgramController@update']);
-$router->delete('programs/{id}', ['uses' => 'ProgramController@destroy']);
