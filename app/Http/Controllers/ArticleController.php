@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Article;
+use DB;
 
 class ArticleController extends Controller
 {
@@ -15,14 +15,15 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::select('id', 'title', 'content', 'created_at')->orderBy('created_at', 'DESC')->get();
+        $articles = DB::table('articles')
+            ->join('topics', 'articles.topic_id', '=', 'topics.id')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'topics.name', 'articles.created_at')
+            ->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {
-
-            $created_at = $value['created_at']->format('d F Y');
-            unset($articles[$key]['created_at']);
-            $articles[$key]['date'] = $created_at;
-            $articles[$key]['content'] = str_limit($value['content'], 100);
+            $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
+            $articles[$key]->title = str_limit($value->title, 16);
+            $articles[$key]->content = str_limit($value->content, 100);
         }
 
         $data = array("status" => 200, "results" => $articles);
@@ -40,12 +41,16 @@ class ArticleController extends Controller
     {
         $this->validate($request, [
             'title' => 'required|string|unique:articles',
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'image' => 'required|string',
+            'topic' => 'required|integer'
         ]);
 
         $article = Article::firstOrCreate([
             'title' => $request->title,
-            'content' => $request->content
+            'content' => $request->content,
+            'image' => $request->image,
+            'topic_id' => $request->topic
         ]);
 
         return response()->json($article, 201);
@@ -59,11 +64,13 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        $article = Article::select('id', 'title', 'content', 'created_at')->find($id);
+        $article = DB::table('articles')
+            ->join('topics', 'articles.topic_id', '=', 'topics.id')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'topics.name', 'articles.created_at')
+            ->where('articles.id', '=', $id)
+            ->first();
 
-        $created_at = $article->created_at->format('d F Y');
-        unset($article->created_at);
-        $article->date = $created_at;
+        $article->created_at = date('d F Y', strtotime($article->created_at));
 
         $data = array("status" => 200, "results" => $article);
 
@@ -81,14 +88,18 @@ class ArticleController extends Controller
     {
         $this->validate($request, [
             'title' => 'required|string|unique:articles,title,' . $id,
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'image' => 'required|string',
+            'topic' => 'required|integer'
         ]);
 
         $article = Article::find($id);
 
         $article->update([
             'title' => $request->title,
-            'content' => $request->content
+            'content' => $request->content,
+            'image' => $request->image,
+            'topic_id' => $request->topic
         ]);
 
         return response()->json($article);
@@ -114,7 +125,7 @@ class ArticleController extends Controller
      */
     public function comments($id)
     {
-        $comments = Article::select('id', 'content', 'created_at')->find($id)->comments()->orderBy('created_at', 'DESC')->get();
+        $comments = Article::find($id)->comments()->select('id', 'content', 'created_at')->orderBy('created_at', 'DESC')->get();
 
         foreach ($comments as $key => $value) {
             $created_at = $value['created_at']->format('d F Y');

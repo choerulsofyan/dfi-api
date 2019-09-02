@@ -27,6 +27,13 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->put('articles/{id}', ['uses' => 'ArticleController@update']);
     $router->delete('articles/{id}', ['uses' => 'ArticleController@destroy']);
 
+    $router->get('topics', ['uses' => 'TopicController@index']);
+    $router->get('topics/{id}', ['uses' => 'TopicController@show']);
+    $router->post('topics', ['uses' => 'TopicController@store']);
+    $router->put('topics/{id}', ['uses' => 'TopicController@update']);
+    $router->delete('topics/{id}', ['uses' => 'TopicController@destroy']);
+    $router->get('topics/{id}/articles', ['uses' => 'TopicController@articles']);
+
     $router->get('comments', ['uses' => 'CommentController@index']);
     $router->get('comments/{id}', ['uses' => 'CommentController@show']);
     $router->put('comments/{id}', ['uses' => 'CommentController@update']);
