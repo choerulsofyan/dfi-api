@@ -17,7 +17,8 @@ class ArticleController extends Controller
     {
         $articles = DB::table('articles')
             ->join('topics', 'articles.topic_id', '=', 'topics.id')
-            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'topics.name AS topic', 'articles.created_at')
+            ->join('users', 'articles.user_id', '=', 'users.id')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'topics.name AS topic', 'articles.created_at', 'users.name as author', 'articles.status')
             ->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {
